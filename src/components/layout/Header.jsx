@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTransactions } from '../../context/TransactionContext';
+import { showConfirmation } from '../../utils/confirmation';
 import { FaBars, FaSignOutAlt } from 'react-icons/fa';
 import MobileMenu from './MobileMenu';
 import styles from './Header.module.css';
@@ -16,11 +17,20 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/login');
-    } catch (error) {
-      console.error("Gagal untuk logout", error);
+    const confirmed = await showConfirmation({
+      title: 'Konfirmasi Logout',
+      text: 'Anda yakin ingin keluar dari sesi ini?',
+      confirmButtonText: 'Ya, Logout',
+      icon: 'question'
+    });
+
+    if (confirmed) {
+      try {
+        await logout();
+        navigate('/login');
+      } catch (error) {
+        console.error("Gagal untuk logout", error);
+      }
     }
   };
 

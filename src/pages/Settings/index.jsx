@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useTransactions } from '../../context/TransactionContext';
 import Button from '../../components/ui/Button';
 import ToggleSwitch from '../../components/ui/ToggleSwitch';
+import { showConfirmation } from '../../utils/confirmation';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import styles from './Settings.module.css';
 
@@ -11,17 +12,27 @@ const SettingsPage = () => {
   const [newCategory, setNewCategory] = useState('');
 
   const handleAddCategory = (e) => {
-    e.preventDefault(); // Mencegah form reload halaman
+    e.preventDefault();
     if (newCategory.trim()) {
       addCategory(newCategory.trim());
       setNewCategory('');
     }
   };
 
+  const handleDeleteCategory = async (categoryName) => {
+    const confirmed = await showConfirmation({
+        title: 'Hapus Kategori?',
+        text: `Anda yakin ingin menghapus kategori "${categoryName}"?`,
+        confirmButtonText: 'Ya, hapus!'
+    });
+    if (confirmed) {
+        deleteCategory(categoryName);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Pengaturan</h1>
-      
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Tema Tampilan</h2>
         <div className={styles.themeToggle}>
@@ -29,24 +40,17 @@ const SettingsPage = () => {
           <span>Mode {theme === 'dark' ? 'Gelap' : 'Terang'}</span>
         </div>
       </div>
-
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Kelola Kategori</h2>
         <form onSubmit={handleAddCategory} className={styles.categoryInput}>
-          <input
-            type="text"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            placeholder="Nama kategori baru"
-            className={styles.input}
-          />
+          <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder="Nama kategori baru" className={styles.input} />
           <Button type="submit" icon={<FaPlus />}>Tambah</Button>
         </form>
         <ul className={styles.categoryList}>
           {categories.map(cat => (
             <li key={cat} className={styles.categoryItem}>
               <span>{cat}</span>
-              <button onClick={() => deleteCategory(cat)} className={styles.deleteButton} title={`Hapus ${cat}`}><FaTrash /></button>
+              <button onClick={() => handleDeleteCategory(cat)} className={styles.deleteButton} title={`Hapus ${cat}`}><FaTrash /></button>
             </li>
           ))}
         </ul>
@@ -54,5 +58,4 @@ const SettingsPage = () => {
     </div>
   );
 };
-
 export default SettingsPage;

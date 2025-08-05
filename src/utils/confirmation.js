@@ -4,13 +4,18 @@ import withReactContent from 'sweetalert2-react-content';
 
 const MySwal = withReactContent(Swal);
 
-export const showConfirmation = async (title, text) => {
+export const showConfirmation = async ({
+  title = 'Apakah Anda yakin?',
+  text = "Aksi ini tidak dapat dibatalkan!",
+  confirmButtonText = 'Ya, lakukan!',
+  icon = 'warning',
+}) => {
   const result = await MySwal.fire({
-    title: title || 'Apakah Anda yakin?',
-    text: text || "Aksi ini tidak dapat dibatalkan!",
-    icon: 'warning',
+    title,
+    text,
+    icon,
     showCancelButton: true,
-    confirmButtonText: 'Ya, hapus!',
+    confirmButtonText,
     cancelButtonText: 'Batal',
     customClass: {
       popup: 'swal-popup',

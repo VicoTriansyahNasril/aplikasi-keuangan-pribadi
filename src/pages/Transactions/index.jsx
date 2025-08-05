@@ -31,7 +31,11 @@ const TransactionsPage = () => {
   }, [transactions, searchTerm, dateFilter]);
 
   const handleDelete = async (id, description) => {
-    const confirmed = await showConfirmation('Hapus Transaksi?', `Anda yakin ingin menghapus transaksi "${description}"?`);
+    const confirmed = await showConfirmation({
+        title: 'Hapus Transaksi?',
+        text: `Anda yakin ingin menghapus transaksi "${description}"?`,
+        confirmButtonText: 'Ya, hapus!'
+    });
     if (confirmed) {
       deleteTransaction(id);
     }

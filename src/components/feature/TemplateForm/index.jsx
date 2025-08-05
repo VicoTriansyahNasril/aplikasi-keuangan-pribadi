@@ -4,12 +4,17 @@ import Select from 'react-select';
 import { useTransactions } from '../../../context/TransactionContext';
 import { formatNumberInput, parseFormattedNumber } from '../../../utils/formatting';
 import Button from '../../ui/Button';
-import styles from '../../feature/TransactionForm/TransactionForm.module.css'; // Re-use styles
+import styles from '../../feature/TransactionForm/TransactionForm.module.css';
 
 const customSelectStyles = {
     control: (provided) => ({...provided, backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', boxShadow: 'none', '&:hover': { borderColor: 'var(--color-primary-accent)' },}),
     menu: (provided) => ({ ...provided, backgroundColor: 'var(--color-primary-bg)', border: '1px solid var(--color-border)'}),
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    menuList: (provided) => ({
+      ...provided,
+      maxHeight: '200px',
+      overflowY: 'auto',
+    }),
     option: (provided, state) => ({ ...provided, backgroundColor: state.isSelected ? 'var(--color-primary-accent)' : state.isFocused ? 'rgba(76, 201, 240, 0.1)' : 'transparent', color: state.isSelected ? 'var(--color-primary-bg)' : 'var(--color-text-primary)', ':active': { backgroundColor: 'var(--color-primary-accent)' }, }),
     singleValue: (provided) => ({ ...provided, color: 'var(--color-text-primary)' }),
     input: (provided) => ({ ...provided, color: 'var(--color-text-primary)' }),

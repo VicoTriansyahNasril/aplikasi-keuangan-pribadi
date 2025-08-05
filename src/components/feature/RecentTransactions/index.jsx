@@ -1,19 +1,14 @@
-// src/components/feature/RecentTransactions/index.jsx
+/* src/components/feature/RecentTransactions/index.jsx */
 import React from 'react';
 import { useTransactions } from '../../../context/TransactionContext';
 import styles from './RecentTransactions.module.css';
 
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  }).format(amount);
-};
+const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+const formatDateShort = (dateString) => new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
 
 const RecentTransactions = () => {
   const { transactions } = useTransactions();
-  const recent = transactions.slice(0, 5); // Ambil 5 transaksi teratas
+  const recent = transactions.slice(0, 5);
 
   if (recent.length === 0) {
     return <p className={styles.noTransactions}>Belum ada transaksi.</p>;
@@ -23,9 +18,12 @@ const RecentTransactions = () => {
     <ul className={styles.list}>
       {recent.map(t => (
         <li key={t.id} className={styles.item}>
-          <div>
+          <div className={styles.leftSection}>
             <p className={styles.description}>{t.description}</p>
-            <span className={styles.category}>{t.category}</span>
+            <div className={styles.details}>
+              <span>{formatDateShort(t.date)}</span>
+              <span className={styles.category}>{t.category}</span>
+            </div>
           </div>
           <p className={`${styles.amount} ${t.type === 'Pemasukan' ? styles.income : styles.expense}`}>
             {t.type === 'Pengeluaran' ? '-' : ''}{formatCurrency(t.amount)}
