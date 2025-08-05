@@ -1,6 +1,6 @@
 /* src/components/layout/Header.module.css */
 .header {
-  background: rgba(10, 25, 47, 0.7);
+  background: var(--color-surface);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   padding: var(--spacing-md) var(--spacing-xl);
@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-xl);
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .balanceInfo {
@@ -61,6 +61,10 @@
 
 .nav a.active {
   color: var(--color-primary-accent);
+  background-color: rgba(0, 119, 182, 0.1);
+}
+
+[data-theme='dark'] .nav a.active {
   background-color: rgba(76, 201, 240, 0.1);
 }
 
@@ -73,15 +77,9 @@
   cursor: pointer;
 }
 
-@media (max-width: 1100px) { 
-  .desktopNav {
-    flex-grow: 1; 
-  }
-  .nav {
-    overflow-x: auto; 
-    padding-bottom: 10px; 
-    margin-bottom: -10px; 
-  }
+@media (max-width: 1100px) {
+  .desktopNav { flex-grow: 1; }
+  .nav { overflow-x: auto; padding-bottom: 10px; margin-bottom: -10px; }
   .nav::-webkit-scrollbar { height: 4px; }
   .nav::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
 }
@@ -89,21 +87,4 @@
 @media (max-width: 850px) {
   .desktopNav { display: none; }
   .hamburgerButton { display: block; }
-}
-
-.logoutButton {
-  background: none;
-  border: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  padding: var(--spacing-sm);
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-}
-.logoutButton:hover {
-  color: var(--color-danger);
-  background-color: rgba(255, 158, 67, 0.1);
 }

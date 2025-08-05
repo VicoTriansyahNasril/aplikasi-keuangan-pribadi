@@ -4,7 +4,7 @@ import { useTransactions } from '../../../context/TransactionContext';
 import styles from './RecentTransactions.module.css';
 
 const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
-const formatDateShort = (dateString) => new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+const formatDateShort = (dateString) => new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 
 const RecentTransactions = () => {
   const { transactions } = useTransactions();

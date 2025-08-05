@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { useTransactions } from '../../../context/TransactionContext';
 import { formatNumberInput, parseFormattedNumber } from '../../../utils/formatting';
+import { showConfirmation } from '../../../utils/confirmation';
 import Button from '../../ui/Button';
 import toast from 'react-hot-toast';
 import styles from './TransactionForm.module.css';
@@ -42,17 +43,35 @@ const TransactionForm = ({ onClose, transactionToEdit }) => {
     }
   }, [transactionToEdit]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const parsedAmount = parseFormattedNumber(amount);
     if (!description.trim()) { toast.error('Deskripsi tidak boleh kosong.'); return; }
     if (parsedAmount <= 0) { toast.error('Nominal harus lebih besar dari 0.'); return; }
     if (!accountId) { toast.error('Akun harus dipilih.'); return; }
     if (type === 'Pengeluaran' && !category) { toast.error('Kategori harus dipilih untuk pengeluaran.'); return; }
-    const transactionData = { type, description, amount: parsedAmount, category: type === 'Pengeluaran' ? category.value : 'Pemasukan', date, accountId };
-    if (transactionToEdit) updateTransaction({ ...transactionData, id: transactionToEdit.id });
-    else addTransaction(transactionData);
-    onClose();
+
+    const transactionData = {
+      type, description, amount: parsedAmount,
+      category: type === 'Pengeluaran' ? category.value : 'Pemasukan',
+      date, accountId
+    };
+
+    if (transactionToEdit) {
+      const confirmed = await showConfirmation({
+        title: 'Konfirmasi Perubahan',
+        text: 'Anda yakin ingin menyimpan perubahan pada transaksi ini?',
+        confirmButtonText: 'Ya, Simpan',
+        icon: 'info'
+      });
+      if (confirmed) {
+        updateTransaction({ ...transactionData, id: transactionToEdit.id });
+        onClose();
+      }
+    } else {
+      addTransaction(transactionData);
+      onClose();
+    }
   };
 
   return (

@@ -35,17 +35,13 @@ export const TransactionProvider = ({ children }) => {
           const recurringQuery = query(collection(userDocRef, 'recurring'));
           
           const [transactionsSnap, accountsSnap, budgetsSnap, categoriesSnap, goalsSnap, recurringSnap] = await Promise.all([
-            getDocs(transactionsQuery),
-            getDocs(accountsQuery),
-            getDoc(doc(userDocRef, 'data', 'budgets')),
-            getDoc(doc(userDocRef, 'data', 'categories')),
-            getDocs(goalsQuery),
-            getDocs(recurringQuery),
+            getDocs(transactionsQuery), getDocs(accountsQuery),
+            getDoc(doc(userDocRef, 'data', 'budgets')), getDoc(doc(userDocRef, 'data', 'categories')),
+            getDocs(goalsQuery), getDocs(recurringQuery),
           ]);
 
           const fetchedTransactions = transactionsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
           let fetchedAccounts = accountsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-
           if (fetchedAccounts.length === 0) {
             await setDoc(doc(userDocRef, 'accounts', 'default'), defaultAccounts[0]);
             fetchedAccounts = defaultAccounts;
@@ -55,12 +51,8 @@ export const TransactionProvider = ({ children }) => {
           setAccounts(fetchedAccounts);
           if (budgetsSnap.exists()) setBudgets(budgetsSnap.data()); else setBudgets({});
           if (categoriesSnap.exists()) setCategories(categoriesSnap.data().list); else setCategories(defaultCategories);
-          
-          const fetchedGoals = goalsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-          const fetchedRecurring = recurringSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-          setGoals(fetchedGoals);
-          setRecurring(fetchedRecurring);
-
+          setGoals(goalsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+          setRecurring(recurringSnap.docs.map(d => ({ id: d.id, ...d.data() })));
         } catch (error) {
           console.error("Error fetching data:", error);
           toast.error("Gagal memuat data.");
@@ -70,20 +62,11 @@ export const TransactionProvider = ({ children }) => {
       };
       fetchData();
     } else {
-      setTransactions([]);
-      setAccounts([]);
-      setBudgets({});
-      setCategories(defaultCategories);
-      setGoals([]);
-      setRecurring([]);
-      setLoading(false);
+      setTransactions([]); setAccounts([]); setBudgets({}); setCategories(defaultCategories); setGoals([]); setRecurring([]); setLoading(false);
     }
   }, [currentUser]);
 
-  useEffect(() => {
-    localStorage.setItem('theme', theme);
-    document.body.setAttribute('data-theme', theme);
-  }, [theme]);
+  useEffect(() => { document.body.setAttribute('data-theme', theme); localStorage.setItem('theme', theme); }, [theme]);
 
   const addTransaction = async (transaction, showToast = true) => {
     if (!currentUser) return;
@@ -91,37 +74,66 @@ export const TransactionProvider = ({ children }) => {
     const userDocRef = doc(db, 'users', currentUser.uid);
     const trxDocRef = doc(userDocRef, 'transactions', newTransaction.id);
     const accountDocRef = doc(userDocRef, 'accounts', transaction.accountId);
-    
     const accountToUpdate = accounts.find(acc => acc.id === transaction.accountId);
     const newBalance = transaction.type === 'Pemasukan' ? accountToUpdate.balance + transaction.amount : accountToUpdate.balance - transaction.amount;
-    
     const batch = writeBatch(db);
     batch.set(trxDocRef, newTransaction);
     batch.update(accountDocRef, { balance: newBalance });
     await batch.commit();
-
-    setTransactions(prev => [newTransaction, ...prev]);
+    setTransactions(prev => [newTransaction, ...prev].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
     setAccounts(prev => prev.map(acc => acc.id === transaction.accountId ? { ...acc, balance: newBalance } : acc));
     if (showToast) toast.success('Transaksi berhasil ditambahkan!');
+  };
+
+  const updateTransaction = async (updatedTransaction) => {
+    if (!currentUser) return;
+    const oldTransaction = transactions.find(t => t.id === updatedTransaction.id);
+    if (!oldTransaction) return toast.error('Transaksi lama tidak ditemukan untuk diperbarui.');
+
+    const batch = writeBatch(db);
+    const userDocRef = doc(db, 'users', currentUser.uid);
+    
+    const oldAccountRef = doc(userDocRef, 'accounts', oldTransaction.accountId);
+    const oldAccount = accounts.find(acc => acc.id === oldTransaction.accountId);
+    let revertedOldBalance = oldAccount.balance;
+    if (oldTransaction.amount !== updatedTransaction.amount || oldTransaction.type !== updatedTransaction.type || oldTransaction.accountId !== updatedTransaction.accountId) {
+        revertedOldBalance = oldTransaction.type === 'Pemasukan' ? oldAccount.balance - oldTransaction.amount : oldAccount.balance + oldTransaction.amount;
+        batch.update(oldAccountRef, { balance: revertedOldBalance });
+    }
+
+    const newAccountRef = doc(userDocRef, 'accounts', updatedTransaction.accountId);
+    const newAccount = accounts.find(acc => acc.id === updatedTransaction.accountId);
+    const startingBalance = oldTransaction.accountId === updatedTransaction.accountId ? revertedOldBalance : newAccount.balance;
+    const finalNewBalance = updatedTransaction.type === 'Pemasukan' ? startingBalance + updatedTransaction.amount : startingBalance - updatedTransaction.amount;
+    batch.update(newAccountRef, { balance: finalNewBalance });
+    
+    const trxDocRef = doc(userDocRef, 'transactions', updatedTransaction.id);
+    const finalTransactionData = { ...oldTransaction, ...updatedTransaction };
+    batch.update(trxDocRef, finalTransactionData);
+    await batch.commit();
+
+    setTransactions(prev => prev.map(t => t.id === updatedTransaction.id ? finalTransactionData : t).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+    setAccounts(prev => prev.map(acc => {
+      if (acc.id === oldTransaction.accountId && acc.id !== updatedTransaction.accountId) return { ...acc, balance: revertedOldBalance };
+      if (acc.id === updatedTransaction.accountId) return { ...acc, balance: finalNewBalance };
+      return acc;
+    }));
+    toast.success('Transaksi berhasil diperbarui!');
   };
 
   const deleteTransaction = async (id) => {
     if (!currentUser) return;
     const trxToDelete = transactions.find(t => t.id === id);
     if (!trxToDelete) return;
-
     const userDocRef = doc(db, 'users', currentUser.uid);
     const trxDocRef = doc(userDocRef, 'transactions', id);
     const accountDocRef = doc(userDocRef, 'accounts', trxToDelete.accountId);
-    
     const accountToUpdate = accounts.find(acc => acc.id === trxToDelete.accountId);
     const newBalance = trxToDelete.type === 'Pemasukan' ? accountToUpdate.balance - trxToDelete.amount : accountToUpdate.balance + trxToDelete.amount;
-    
     const batch = writeBatch(db);
     batch.delete(trxDocRef);
     batch.update(accountDocRef, { balance: newBalance });
     await batch.commit();
-    
     setTransactions(prev => prev.filter(t => t.id !== id));
     setAccounts(prev => prev.map(acc => acc.id === trxToDelete.accountId ? { ...acc, balance: newBalance } : acc));
     toast.success('Transaksi berhasil dihapus.');
@@ -172,16 +184,10 @@ export const TransactionProvider = ({ children }) => {
     if (!currentUser) return;
     const goalToUpdate = goals.find(g => g.id === goalId);
     const newCurrentAmount = goalToUpdate.currentAmount + amount;
-
     await addTransaction({
-        type: 'Pengeluaran',
-        description: `Menabung untuk: ${goalToUpdate.name}`,
-        amount,
-        category: 'Tujuan Menabung',
-        date: new Date().toISOString().split('T')[0],
-        accountId: fromAccountId
+        type: 'Pengeluaran', description: `Menabung untuk: ${goalToUpdate.name}`, amount,
+        category: 'Tujuan Menabung', date: new Date().toISOString().split('T')[0], accountId: fromAccountId
     }, false);
-
     await setDoc(doc(db, 'users', currentUser.uid, 'goals', goalId), { currentAmount: newCurrentAmount }, { merge: true });
     setGoals(prev => prev.map(g => g.id === goalId ? { ...g, currentAmount: newCurrentAmount } : g));
     toast.success('Berhasil menabung untuk tujuan!');
@@ -215,17 +221,11 @@ export const TransactionProvider = ({ children }) => {
 
   const value = {
     transactions, accounts, totalBalance, income, expense, budgets, categories, theme, loading, goals, recurring,
-    addTransaction, deleteTransaction, addAccount, deleteAccount, setBudgetForCategory, addCategory, deleteCategory, toggleTheme,
-    addGoal, contributeToGoal, deleteGoal, addRecurring, deleteRecurring,
+    addTransaction, updateTransaction, deleteTransaction, addAccount, deleteAccount, setBudgetForCategory,
+    addCategory, deleteCategory, addGoal, contributeToGoal, deleteGoal, addRecurring, deleteRecurring, toggleTheme,
   };
 
-  return (
-    <TransactionContext.Provider value={value}>
-      {children}
-    </TransactionContext.Provider>
-  );
+  return <TransactionContext.Provider value={value}>{children}</TransactionContext.Provider>;
 };
 
-export const useTransactions = () => {
-  return useContext(TransactionContext);
-};
+export const useTransactions = () => useContext(TransactionContext);
