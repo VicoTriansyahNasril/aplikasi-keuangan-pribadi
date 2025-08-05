@@ -45,17 +45,11 @@ const TransactionForm = ({ onClose, transactionToEdit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const parsedAmount = parseFormattedNumber(amount);
-
     if (!description.trim()) { toast.error('Deskripsi tidak boleh kosong.'); return; }
     if (parsedAmount <= 0) { toast.error('Nominal harus lebih besar dari 0.'); return; }
     if (!accountId) { toast.error('Akun harus dipilih.'); return; }
     if (type === 'Pengeluaran' && !category) { toast.error('Kategori harus dipilih untuk pengeluaran.'); return; }
-
-    const transactionData = {
-      type, description, amount: parsedAmount,
-      category: type === 'Pengeluaran' ? category.value : 'Pemasukan',
-      date, accountId
-    };
+    const transactionData = { type, description, amount: parsedAmount, category: type === 'Pengeluaran' ? category.value : 'Pemasukan', date, accountId };
     if (transactionToEdit) updateTransaction({ ...transactionData, id: transactionToEdit.id });
     else addTransaction(transactionData);
     onClose();
@@ -71,9 +65,9 @@ const TransactionForm = ({ onClose, transactionToEdit }) => {
       </div>
       <div className={styles.formGroup}>
         <label htmlFor="account" className={styles.label}>Akun</label>
-        <Select id="account" options={accountOptions} value={accountOptions.find(opt => opt.value === accountId)} onChange={opt => setAccountId(opt.value)} styles={customSelectStyles} menuPortalTarget={document.body} />
+        <Select id="account" options={accountOptions} value={accountOptions.find(opt => opt.value === accountId)} onChange={opt => setAccountId(opt.value)} styles={customSelectStyles} menuPortalTarget={document.body} menuPosition={'fixed'} />
       </div>
-      {type === 'Pengeluaran' && (<div className={styles.formGroup}><label htmlFor="category" className={styles.label}>Kategori</label><Select id="category" options={categoryOptions} value={category} onChange={setCategory} styles={customSelectStyles} placeholder="Pilih atau ketik kategori..." menuPortalTarget={document.body} /></div>)}
+      {type === 'Pengeluaran' && (<div className={styles.formGroup}><label htmlFor="category" className={styles.label}>Kategori</label><Select id="category" options={categoryOptions} value={category} onChange={setCategory} styles={customSelectStyles} placeholder="Pilih atau ketik kategori..." menuPortalTarget={document.body} menuPosition={'fixed'} /></div>)}
       <Button type="submit" variant="primary">{transactionToEdit ? 'Update' : 'Simpan'}</Button>
     </form>
   );

@@ -1,10 +1,21 @@
-// src/components/ui/Modal/index.jsx
-import React from 'react';
+/* src/components/ui/Modal/index.jsx */
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './Modal.module.css';
 import { FaTimes } from 'react-icons/fa';
 
 const Modal = ({ isOpen, onClose, title, children }) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
@@ -17,7 +28,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         {children}
       </div>
     </div>,
-    document.getElementById('portal') // Kita perlu tambahkan div ini di index.html
+    document.getElementById('portal')
   );
 };
 

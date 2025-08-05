@@ -10,11 +10,7 @@ const customSelectStyles = {
     control: (provided) => ({...provided, backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', boxShadow: 'none', '&:hover': { borderColor: 'var(--color-primary-accent)' },}),
     menu: (provided) => ({ ...provided, backgroundColor: 'var(--color-primary-bg)', border: '1px solid var(--color-border)'}),
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-    menuList: (provided) => ({
-      ...provided,
-      maxHeight: '200px',
-      overflowY: 'auto',
-    }),
+    menuList: (provided) => ({ ...provided, maxHeight: '200px', overflowY: 'auto' }),
     option: (provided, state) => ({ ...provided, backgroundColor: state.isSelected ? 'var(--color-primary-accent)' : state.isFocused ? 'rgba(76, 201, 240, 0.1)' : 'transparent', color: state.isSelected ? 'var(--color-primary-bg)' : 'var(--color-text-primary)', ':active': { backgroundColor: 'var(--color-primary-accent)' }, }),
     singleValue: (provided) => ({ ...provided, color: 'var(--color-text-primary)' }),
     input: (provided) => ({ ...provided, color: 'var(--color-text-primary)' }),
@@ -38,11 +34,7 @@ const TemplateForm = ({ onClose }) => {
     if (!description.trim() || !amount || !accountId || (type === 'Pengeluaran' && !category)) {
       setError('Semua kolom harus diisi.'); return;
     }
-    const templateData = {
-      type, description, amount: parseFormattedNumber(amount),
-      category: type === 'Pengeluaran' ? category.value : 'Pemasukan',
-      accountId
-    };
+    const templateData = { type, description, amount: parseFormattedNumber(amount), category: type === 'Pengeluaran' ? category.value : 'Pemasukan', accountId };
     addRecurring(templateData);
     onClose();
   };
@@ -54,9 +46,9 @@ const TemplateForm = ({ onClose }) => {
       <div className={styles.formGroup}><label htmlFor="amount" className={styles.label}>Nominal (Rp)</label><input type="text" id="amount" value={amount} onChange={(e) => setAmount(formatNumberInput(e.target.value))} className={styles.input} required inputMode="decimal" /></div>
       <div className={styles.formGroup}>
         <label htmlFor="account" className={styles.label}>Akun</label>
-        <Select id="account" options={accountOptions} value={accountOptions.find(opt => opt.value === accountId)} onChange={opt => setAccountId(opt.value)} styles={customSelectStyles} menuPortalTarget={document.body} />
+        <Select id="account" options={accountOptions} value={accountOptions.find(opt => opt.value === accountId)} onChange={opt => setAccountId(opt.value)} styles={customSelectStyles} menuPortalTarget={document.body} menuPosition={'fixed'} />
       </div>
-      {type === 'Pengeluaran' && (<div className={styles.formGroup}><label htmlFor="category" className={styles.label}>Kategori</label><Select id="category" options={categoryOptions} value={category} onChange={setCategory} styles={customSelectStyles} placeholder="Pilih kategori..." menuPortalTarget={document.body} /></div>)}
+      {type === 'Pengeluaran' && (<div className={styles.formGroup}><label htmlFor="category" className={styles.label}>Kategori</label><Select id="category" options={categoryOptions} value={category} onChange={setCategory} styles={customSelectStyles} placeholder="Pilih kategori..." menuPortalTarget={document.body} menuPosition={'fixed'} /></div>)}
       {error && <p className={styles.errorMessage}>{error}</p>}
       <Button type="submit" variant="primary">Simpan Template</Button>
     </form>
