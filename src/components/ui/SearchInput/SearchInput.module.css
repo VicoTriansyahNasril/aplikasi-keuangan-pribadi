@@ -1,0 +1,30 @@
+/* src/components/ui/SearchInput/SearchInput.module.css */
+.wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px; /* Batasi lebar agar tidak terlalu besar */
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  left: var(--spacing-md);
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+}
+
+.input {
+  width: 100%;
+  padding: var(--spacing-md);
+  padding-left: calc(var(--spacing-md) * 2 + 16px); /* Ruang untuk ikon */
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  background-color: var(--color-surface);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}

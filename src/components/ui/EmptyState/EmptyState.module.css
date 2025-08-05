@@ -1,0 +1,29 @@
+/* src/components/ui/EmptyState/EmptyState.module.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-xl);
+  height: 100%;
+  min-height: 200px;
+  color: var(--color-text-secondary);
+}
+
+.icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-lg);
+  opacity: 0.5;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.message {
+  max-width: 300px;
+}

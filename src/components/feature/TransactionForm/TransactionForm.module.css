@@ -1,0 +1,88 @@
+/* src/components/feature/TransactionForm/TransactionForm.module.css */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+.label {
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.input,
+.select {
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  font-size: 1rem;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  width: 100%;
+}
+
+.input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.6) brightness(100%) sepia(100%) saturate(0%) hue-rotate(0deg);
+  cursor: pointer;
+}
+
+.input:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--color-primary-accent);
+  box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.2);
+}
+
+.typeSelector {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.typeButton {
+  flex: 1;
+  padding: var(--spacing-md);
+  border: 2px solid var(--color-border);
+  background-color: var(--color-surface);
+  cursor: pointer;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  transition: all 0.2s ease;
+}
+
+.typeButton.income.active {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+  color: var(--color-primary-bg);
+}
+
+.typeButton.expense.active {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+  color: var(--color-primary-bg);
+}
+
+.errorMessage {
+  color: var(--color-danger);
+  font-size: 0.9rem;
+  margin-top: var(--spacing-sm);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,74 @@
+/* src/components/feature/RecentTransactions/RecentTransactions.module.css */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  max-height: 280px; /* Batasi tinggi maksimum list */
+  overflow-y: auto; /* Tampilkan scrollbar jika konten melebihi max-height */
+  padding-right: var(--spacing-sm); /* Beri ruang untuk scrollbar */
+}
+
+/* Custom Scrollbar Styling - Techy Look */
+.list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.list::-webkit-scrollbar-thumb {
+  background-color: var(--color-text-secondary);
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--color-primary-bg); /* Sedikit lebih gelap dari surface */
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.description {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.category {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  background-color: rgba(76, 201, 240, 0.1);
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: var(--spacing-xs);
+  display: inline-block;
+}
+
+.amount {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.income {
+  color: var(--color-success);
+}
+
+.expense {
+  color: var(--color-danger);
+}
+
+.noTransactions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-secondary);
+  padding: var(--spacing-xl);
+}

@@ -1,0 +1,80 @@
+/* src/components/layout/MobileMenu/MobileMenu.module.css */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 19;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.backdrop.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 70%;
+  max-width: 300px;
+  height: 100%;
+  background-color: var(--color-primary-bg);
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+  z-index: 20;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+}
+
+.menu.open {
+  transform: translateX(0);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 1.8rem;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-bottom: var(--spacing-xl);
+}
+
+.navLinks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  flex-grow: 1; 
+  overflow-y: auto;
+  padding-right: var(--spacing-sm);
+}
+
+.navLinks::-webkit-scrollbar {
+  width: 6px;
+}
+.navLinks::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.navLinks a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+}
+
+.navLinks a.active {
+  color: var(--color-primary-accent);
+  background-color: var(--color-surface);
+}

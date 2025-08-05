@@ -1,0 +1,109 @@
+/* src/components/layout/Header.module.css */
+.header {
+  background: rgba(10, 25, 47, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: var(--spacing-md) var(--spacing-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo a {
+  font-family: 'Fira Code', 'Source Code Pro', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--color-primary-accent);
+  text-decoration: none;
+}
+
+.desktopNav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xl);
+  overflow: hidden; 
+}
+
+.balanceInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background-color: var(--color-surface);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.balanceInfo span:first-child { color: var(--color-text-secondary); }
+.balanceAmount { color: var(--color-text-primary); font-weight: 600; }
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.nav a {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  transition: color 0.2s ease;
+  padding: 4px 8px;
+  position: relative;
+  border-radius: var(--border-radius-sm);
+  white-space: nowrap;
+}
+
+.nav a.active {
+  color: var(--color-primary-accent);
+  background-color: rgba(76, 201, 240, 0.1);
+}
+
+.hamburgerButton {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 1100px) { 
+  .desktopNav {
+    flex-grow: 1; 
+  }
+  .nav {
+    overflow-x: auto; 
+    padding-bottom: 10px; 
+    margin-bottom: -10px; 
+  }
+  .nav::-webkit-scrollbar { height: 4px; }
+  .nav::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+}
+
+@media (max-width: 850px) {
+  .desktopNav { display: none; }
+  .hamburgerButton { display: block; }
+}
+
+.logoutButton {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+.logoutButton:hover {
+  color: var(--color-danger);
+  background-color: rgba(255, 158, 67, 0.1);
+}

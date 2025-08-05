@@ -1,0 +1,34 @@
+/* src/pages/Landing/Landing.module.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 80vh;
+  padding: var(--spacing-xl);
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  text-shadow: 0 0 15px rgba(76, 201, 240, 0.3);
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin-bottom: var(--spacing-xl);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+  .subtitle {
+    font-size: 1.2rem;
+  }
+}

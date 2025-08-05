@@ -1,0 +1,26 @@
+/* src/pages/Recurring/Recurring.module.css */
+.container { background-color: var(--color-surface); padding: var(--spacing-xl); border-radius: var(--border-radius-md); border: 1px solid var(--color-border); }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xl); flex-wrap: wrap; gap: var(--spacing-md); }
+.title { font-size: 2rem; font-weight: 700; margin-bottom: 0; }
+.subtitle { color: var(--color-text-secondary); margin-top: var(--spacing-xs); max-width: 600px; }
+.recurringList { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-lg); }
+.recurringItem { display: flex; flex-direction: column; background-color: var(--color-primary-bg); padding: var(--spacing-lg); border-radius: var(--border-radius-md); border: 1px solid var(--color-border); }
+.itemHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-md); }
+.itemInfo p:first-child { font-size: 1.2rem; font-weight: 600; }
+.itemInfo span { font-size: 0.8rem; color: var(--color-text-secondary); background-color: var(--color-surface); padding: 2px 8px; border-radius: 10px; }
+.itemAmount { font-size: 1.5rem; font-weight: 700; }
+.income { color: var(--color-success); }
+.expense { color: var(--color-danger); }
+.itemFooter { margin-top: auto; padding-top: var(--spacing-md); border-top: 1px solid var(--color-border); display: flex; justify-content: flex-end; }
+.deleteButton { background: none; border: none; color: var(--color-text-secondary); cursor: pointer; }
+.deleteButton:hover { color: var(--color-danger); }
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.8rem;
+  }
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

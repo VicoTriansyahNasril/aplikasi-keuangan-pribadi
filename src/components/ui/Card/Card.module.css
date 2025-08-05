@@ -1,0 +1,49 @@
+/* src/components/ui/Card/Card.module.css */
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  border-color: var(--color-primary-accent);
+  box-shadow: var(--glow-shadow);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.cardContent {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  word-break: break-all;
+}
+
+.income {
+  color: var(--color-success);
+}
+
+.expense {
+  color: var(--color-danger);
+}
+
+@media (max-width: 480px) {
+  .cardContent {
+    font-size: 1.5rem; 
+  }
+}
