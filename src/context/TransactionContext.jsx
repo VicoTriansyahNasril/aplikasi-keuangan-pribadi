@@ -17,6 +17,8 @@ export const TransactionProvider = ({ children }) => {
   const [accounts, setAccounts] = useState([]);
   const [budgets, setBudgets] = useState({});
   const [categories, setCategories] = useState(defaultCategories);
+  const [goals, setGoals] = useState([]);
+  const [recurring, setRecurring] = useState([]);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
   const [loading, setLoading] = useState(true);
 
@@ -29,12 +31,16 @@ export const TransactionProvider = ({ children }) => {
           
           const transactionsQuery = query(collection(userDocRef, 'transactions'), orderBy('createdAt', 'desc'));
           const accountsQuery = query(collection(userDocRef, 'accounts'));
+          const goalsQuery = query(collection(userDocRef, 'goals'));
+          const recurringQuery = query(collection(userDocRef, 'recurring'));
           
-          const [transactionsSnap, accountsSnap, budgetsSnap, categoriesSnap] = await Promise.all([
+          const [transactionsSnap, accountsSnap, budgetsSnap, categoriesSnap, goalsSnap, recurringSnap] = await Promise.all([
             getDocs(transactionsQuery),
             getDocs(accountsQuery),
             getDoc(doc(userDocRef, 'data', 'budgets')),
             getDoc(doc(userDocRef, 'data', 'categories')),
+            getDocs(goalsQuery),
+            getDocs(recurringQuery),
           ]);
 
           const fetchedTransactions = transactionsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -47,8 +53,13 @@ export const TransactionProvider = ({ children }) => {
 
           setTransactions(fetchedTransactions);
           setAccounts(fetchedAccounts);
-          if (budgetsSnap.exists()) setBudgets(budgetsSnap.data());
-          if (categoriesSnap.exists()) setCategories(categoriesSnap.data().list);
+          if (budgetsSnap.exists()) setBudgets(budgetsSnap.data()); else setBudgets({});
+          if (categoriesSnap.exists()) setCategories(categoriesSnap.data().list); else setCategories(defaultCategories);
+          
+          const fetchedGoals = goalsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+          const fetchedRecurring = recurringSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+          setGoals(fetchedGoals);
+          setRecurring(fetchedRecurring);
 
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -63,6 +74,8 @@ export const TransactionProvider = ({ children }) => {
       setAccounts([]);
       setBudgets({});
       setCategories(defaultCategories);
+      setGoals([]);
+      setRecurring([]);
       setLoading(false);
     }
   }, [currentUser]);
@@ -72,7 +85,7 @@ export const TransactionProvider = ({ children }) => {
     document.body.setAttribute('data-theme', theme);
   }, [theme]);
 
-  const addTransaction = async (transaction) => {
+  const addTransaction = async (transaction, showToast = true) => {
     if (!currentUser) return;
     const newTransaction = { id: uuidv4(), createdAt: new Date().toISOString(), ...transaction };
     const userDocRef = doc(db, 'users', currentUser.uid);
@@ -89,7 +102,7 @@ export const TransactionProvider = ({ children }) => {
 
     setTransactions(prev => [newTransaction, ...prev]);
     setAccounts(prev => prev.map(acc => acc.id === transaction.accountId ? { ...acc, balance: newBalance } : acc));
-    toast.success('Transaksi berhasil ditambahkan!');
+    if (showToast) toast.success('Transaksi berhasil ditambahkan!');
   };
 
   const deleteTransaction = async (id) => {
@@ -147,6 +160,52 @@ export const TransactionProvider = ({ children }) => {
     await setDoc(doc(db, 'users', currentUser.uid, 'data', 'categories'), { list: newCategories });
     setCategories(newCategories);
   };
+  
+  const addGoal = async (name, targetAmount) => {
+    if (!currentUser) return;
+    const newGoal = { id: uuidv4(), name, targetAmount, currentAmount: 0 };
+    await setDoc(doc(db, 'users', currentUser.uid, 'goals', newGoal.id), newGoal);
+    setGoals(prev => [...prev, newGoal]);
+  };
+
+  const contributeToGoal = async (goalId, amount, fromAccountId) => {
+    if (!currentUser) return;
+    const goalToUpdate = goals.find(g => g.id === goalId);
+    const newCurrentAmount = goalToUpdate.currentAmount + amount;
+
+    await addTransaction({
+        type: 'Pengeluaran',
+        description: `Menabung untuk: ${goalToUpdate.name}`,
+        amount,
+        category: 'Tujuan Menabung',
+        date: new Date().toISOString().split('T')[0],
+        accountId: fromAccountId
+    }, false);
+
+    await setDoc(doc(db, 'users', currentUser.uid, 'goals', goalId), { currentAmount: newCurrentAmount }, { merge: true });
+    setGoals(prev => prev.map(g => g.id === goalId ? { ...g, currentAmount: newCurrentAmount } : g));
+    toast.success('Berhasil menabung untuk tujuan!');
+  };
+
+  const deleteGoal = async (id) => {
+    if (!currentUser) return;
+    await deleteDoc(doc(db, 'users', currentUser.uid, 'goals', id));
+    setGoals(prev => prev.filter(g => g.id !== id));
+  };
+
+  const addRecurring = async (recurringData) => {
+    if (!currentUser) return;
+    const newRecurring = { id: uuidv4(), ...recurringData };
+    await setDoc(doc(db, 'users', currentUser.uid, 'recurring', newRecurring.id), newRecurring);
+    setRecurring(prev => [...prev, newRecurring]);
+    toast.success('Template berulang ditambahkan!');
+  };
+
+  const deleteRecurring = async (id) => {
+    if (!currentUser) return;
+    await deleteDoc(doc(db, 'users', currentUser.uid, 'recurring', id));
+    setRecurring(prev => prev.filter(r => r.id !== id));
+  };
 
   const toggleTheme = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
   
@@ -155,8 +214,9 @@ export const TransactionProvider = ({ children }) => {
   const expense = transactions.filter(t => t.type === 'Pengeluaran').reduce((acc, t) => acc + t.amount, 0);
 
   const value = {
-    transactions, accounts, totalBalance, income, expense, budgets, categories, theme, loading,
+    transactions, accounts, totalBalance, income, expense, budgets, categories, theme, loading, goals, recurring,
     addTransaction, deleteTransaction, addAccount, deleteAccount, setBudgetForCategory, addCategory, deleteCategory, toggleTheme,
+    addGoal, contributeToGoal, deleteGoal, addRecurring, deleteRecurring,
   };
 
   return (
