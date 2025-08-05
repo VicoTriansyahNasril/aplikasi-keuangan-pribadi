@@ -78,3 +78,27 @@
   color: var(--color-primary-accent);
   background-color: var(--color-surface);
 }
+
+.logoutButton {
+  margin-top: auto; /* Mendorong tombol ke bagian paling bawah */
+  padding: var(--spacing-md);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  color: var(--color-text-secondary);
+  font-size: 1.1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.logoutButton:hover {
+  background-color: var(--color-danger);
+  color: var(--color-text-primary);
+  border-color: var(--color-danger);
+}

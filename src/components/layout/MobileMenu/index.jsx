@@ -1,10 +1,15 @@
 /* src/components/layout/MobileMenu/index.jsx */
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaSignOutAlt } from 'react-icons/fa';
 import styles from './MobileMenu.module.css';
 
-const MobileMenu = ({ isOpen, onClose }) => {
+const MobileMenu = ({ isOpen, onClose, onLogout }) => {
+  const handleLogoutClick = () => {
+    onClose();
+    onLogout();
+  };
+
   return (
     <>
       <div className={`${styles.backdrop} ${isOpen ? styles.open : ''}`} onClick={onClose} />
@@ -22,6 +27,10 @@ const MobileMenu = ({ isOpen, onClose }) => {
           <NavLink to="/recurring" onClick={onClose} className={({ isActive }) => (isActive ? styles.active : '')}>Berulang</NavLink>
           <NavLink to="/settings" onClick={onClose} className={({ isActive }) => (isActive ? styles.active : '')}>Pengaturan</NavLink>
         </nav>
+        <button className={styles.logoutButton} onClick={handleLogoutClick}>
+          <FaSignOutAlt />
+          <span>Logout</span>
+        </button>
       </div>
     </>
   );
