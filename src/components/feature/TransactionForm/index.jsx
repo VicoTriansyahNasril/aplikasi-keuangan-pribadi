@@ -4,17 +4,18 @@ import Select from 'react-select';
 import { useTransactions } from '../../../context/TransactionContext';
 import { formatNumberInput, parseFormattedNumber } from '../../../utils/formatting';
 import Button from '../../ui/Button';
+import toast from 'react-hot-toast';
 import styles from './TransactionForm.module.css';
 
 const getTodayString = () => new Date().toISOString().split('T')[0];
 
 const customSelectStyles = {
-  control: (provided) => ({...provided, backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', boxShadow: 'none', '&:hover': { borderColor: 'var(--color-primary-accent)' },}),
-  menu: (provided) => ({ ...provided, backgroundColor: 'var(--color-primary-bg)', border: '1px solid var(--color-border)'}),
-  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-  option: (provided, state) => ({ ...provided, backgroundColor: state.isSelected ? 'var(--color-primary-accent)' : state.isFocused ? 'rgba(76, 201, 240, 0.1)' : 'transparent', color: state.isSelected ? 'var(--color-primary-bg)' : 'var(--color-text-primary)', ':active': { backgroundColor: 'var(--color-primary-accent)' }, }),
-  singleValue: (provided) => ({ ...provided, color: 'var(--color-text-primary)' }),
-  input: (provided) => ({ ...provided, color: 'var(--color-text-primary)' }),
+    control: (provided) => ({...provided, backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', boxShadow: 'none', '&:hover': { borderColor: 'var(--color-primary-accent)' },}),
+    menu: (provided) => ({ ...provided, backgroundColor: 'var(--color-primary-bg)', border: '1px solid var(--color-border)'}),
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    option: (provided, state) => ({ ...provided, backgroundColor: state.isSelected ? 'var(--color-primary-accent)' : state.isFocused ? 'rgba(76, 201, 240, 0.1)' : 'transparent', color: state.isSelected ? 'var(--color-primary-bg)' : 'var(--color-text-primary)', ':active': { backgroundColor: 'var(--color-primary-accent)' }, }),
+    singleValue: (provided) => ({ ...provided, color: 'var(--color-text-primary)' }),
+    input: (provided) => ({ ...provided, color: 'var(--color-text-primary)' }),
 };
 
 const TransactionForm = ({ onClose, transactionToEdit }) => {
@@ -25,7 +26,6 @@ const TransactionForm = ({ onClose, transactionToEdit }) => {
   const [category, setCategory] = useState(null);
   const [date, setDate] = useState(getTodayString());
   const [accountId, setAccountId] = useState(accounts[0]?.id || '');
-  const [error, setError] = useState('');
 
   const categoryOptions = categories.map(c => ({ value: c, label: c }));
   const accountOptions = accounts.map(a => ({ value: a.id, label: `${a.name}` }));
@@ -43,10 +43,16 @@ const TransactionForm = ({ onClose, transactionToEdit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
-    if (!description.trim() || !amount || !accountId || (type === 'Pengeluaran' && !category)) {
-      setError('Semua kolom harus diisi.'); return;
+    if (!description.trim() || !amount) {
+      toast.error('Deskripsi dan Nominal tidak boleh kosong.'); return;
     }
+    if (!accountId) {
+      toast.error('Akun harus dipilih.'); return;
+    }
+    if (type === 'Pengeluaran' && !category) {
+      toast.error('Kategori harus dipilih untuk pengeluaran.'); return;
+    }
+
     const transactionData = {
       type, description, amount: parseFormattedNumber(amount),
       category: type === 'Pengeluaran' ? category.value : 'Pemasukan',
@@ -70,7 +76,6 @@ const TransactionForm = ({ onClose, transactionToEdit }) => {
         <Select id="account" options={accountOptions} value={accountOptions.find(opt => opt.value === accountId)} onChange={opt => setAccountId(opt.value)} styles={customSelectStyles} menuPortalTarget={document.body} />
       </div>
       {type === 'Pengeluaran' && (<div className={styles.formGroup}><label htmlFor="category" className={styles.label}>Kategori</label><Select id="category" options={categoryOptions} value={category} onChange={setCategory} styles={customSelectStyles} placeholder="Pilih atau ketik kategori..." menuPortalTarget={document.body} /></div>)}
-      {error && <p className={styles.errorMessage}>{error}</p>}
       <Button type="submit" variant="primary">{transactionToEdit ? 'Update' : 'Simpan'}</Button>
     </form>
   );
