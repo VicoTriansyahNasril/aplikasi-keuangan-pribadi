@@ -17,7 +17,8 @@ const BudgetPage = () => {
     setAmount(formatNumberInput(currentAmount));
   };
 
-  const handleSave = (category) => {
+  const handleSave = (e, category) => {
+    e.preventDefault();
     const parsedAmount = parseFormattedNumber(amount);
     setBudgetForCategory(category, parsedAmount);
     setEditingCategory(null);
@@ -34,7 +35,7 @@ const BudgetPage = () => {
           <div key={category} className={styles.budgetItem}>
             <span className={styles.categoryName}>{category}</span>
             {editingCategory === category ? (
-              <div className={styles.editForm}>
+              <form onSubmit={(e) => handleSave(e, category)} className={styles.editForm}>
                 <input
                   type="text"
                   value={amount}
@@ -43,9 +44,9 @@ const BudgetPage = () => {
                   placeholder="e.g., 500.000"
                   autoFocus
                 />
-                <Button onClick={() => handleSave(category)}>Simpan</Button>
-                <Button onClick={() => setEditingCategory(null)} variant="secondary">Batal</Button>
-              </div>
+                <Button type="submit">Simpan</Button>
+                <Button onClick={() => setEditingCategory(null)} variant="secondary" type="button">Batal</Button>
+              </form>
             ) : (
               <div className={styles.displayMode}>
                 <span className={styles.amount}>{budgets[category] ? formatCurrency(budgets[category]) : 'Belum diatur'}</span>

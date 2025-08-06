@@ -43,7 +43,13 @@ const SettingsPage = () => {
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Kelola Kategori</h2>
         <form onSubmit={handleAddCategory} className={styles.categoryInput}>
-          <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder="Nama kategori baru" className={styles.input} />
+          <input
+            type="text"
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+            placeholder="Nama kategori baru"
+            className={styles.input}
+          />
           <Button type="submit" icon={<FaPlus />}>Tambah</Button>
         </form>
         <ul className={styles.categoryList}>

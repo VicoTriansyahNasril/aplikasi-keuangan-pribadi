@@ -15,25 +15,47 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const [passwordError, setPasswordError] = useState('');
+  const { register, logout } = useAuth();
   const navigate = useNavigate();
+
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    if (newPassword.length > 0 && newPassword.length < 6) {
+      setPasswordError('Password minimal harus 6 karakter.');
+    } else {
+      setPasswordError('');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password.length < 6) {
+      setPasswordError('Password minimal harus 6 karakter.');
+      return;
+    }
     if (password !== confirmPassword) {
       return toast.error("Password tidak cocok!");
     }
     setLoading(true);
     try {
       await register(email, password);
-      toast.success('Registrasi berhasil! Selamat datang.');
-      navigate('/dashboard');
+      await logout();
+      toast.success('Akun berhasil dibuat! Silakan login.');
+      navigate('/login');
     } catch (error) {
-      toast.error('Gagal melakukan registrasi. Coba lagi.');
+      if (error.code === 'auth/email-already-in-use') {
+        toast.error('Email ini sudah terdaftar. Silakan login.');
+      } else {
+        toast.error('Gagal melakukan registrasi. Coba lagi.');
+      }
       console.error(error);
     }
     setLoading(false);
   };
+
+  const isFormInvalid = passwordError || password !== confirmPassword || password.length === 0;
 
   return (
     <div className={styles.container}>
@@ -44,9 +66,10 @@ const RegisterPage = () => {
           <div className={styles.formGroup}>
             <label htmlFor="password" className={styles.label}>Password</label>
             <div className={styles.passwordWrapper}>
-              <input type={showPassword ? 'text' : 'password'} id="password" value={password} onChange={(e) => setPassword(e.target.value)} className={styles.input} required />
+              <input type={showPassword ? 'text' : 'password'} id="password" value={password} onChange={handlePasswordChange} className={styles.input} required />
               <button type="button" onClick={() => setShowPassword(!showPassword)} className={styles.passwordToggle}>{showPassword ? <FaEyeSlash /> : <FaEye />}</button>
             </div>
+            {passwordError && <p className={styles.errorMessage}>{passwordError}</p>}
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="confirmPassword" className={styles.label}>Konfirmasi Password</label>
@@ -55,7 +78,9 @@ const RegisterPage = () => {
               <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className={styles.passwordToggle}>{showConfirmPassword ? <FaEyeSlash /> : <FaEye />}</button>
             </div>
           </div>
-          <Button type="submit" variant="primary" disabled={loading}>{loading ? 'Loading...' : 'Daftar'}</Button>
+          <Button type="submit" variant="primary" disabled={loading || isFormInvalid}>
+            {loading ? 'Mendaftar...' : 'Daftar'}
+          </Button>
         </form>
         <p className={styles.footerText}>Sudah punya akun? <Link to="/login">Login di sini</Link></p>
       </motion.div>

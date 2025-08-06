@@ -14,7 +14,8 @@ const GoalItem = ({ goal }) => {
   const [amount, setAmount] = useState('');
   const [accountId, setAccountId] = useState(accounts[0]?.id || '');
 
-  const handleContribute = () => {
+  const handleContribute = (e) => {
+    e.preventDefault();
     const contributionAmount = parseFormattedNumber(amount);
     if (contributionAmount > 0 && accountId) {
       contributeToGoal(goal.id, contributionAmount, accountId);
@@ -32,13 +33,13 @@ const GoalItem = ({ goal }) => {
       <p className={styles.amountInfo}>
         <span className={styles.currentAmount}>{formatCurrency(goal.currentAmount)}</span> / <span className={styles.targetAmount}>{formatCurrency(goal.targetAmount)}</span>
       </p>
-      <div className={styles.contributeForm}>
+      <form onSubmit={handleContribute} className={styles.contributeForm}>
         <input type="text" value={amount} onChange={e => setAmount(formatNumberInput(e.target.value))} placeholder="Jumlah" className={styles.input} />
         <select value={accountId} onChange={e => setAccountId(e.target.value)} className={styles.input}>
           {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
         </select>
-        <Button onClick={handleContribute} icon={<FaDonate />}>Tabung</Button>
-      </div>
+        <Button type="submit" icon={<FaDonate />}>Tabung</Button>
+      </form>
     </div>
   );
 };

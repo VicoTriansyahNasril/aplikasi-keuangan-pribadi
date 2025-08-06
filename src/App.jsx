@@ -7,6 +7,7 @@ import AnimatedBackground from './components/layout/AnimatedBackground';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { TransactionProvider } from './context/TransactionContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 const LandingPage = lazy(() => import('./pages/Landing'));
 const LoginPage = lazy(() => import('./pages/Login'));
@@ -19,44 +20,47 @@ const SettingsPage = lazy(() => import('./pages/Settings'));
 const AccountsPage = lazy(() => import('./pages/Accounts'));
 const RecurringPage = lazy(() => import('./pages/Recurring'));
 const GoalsPage = lazy(() => import('./pages/Goals'));
-const ProtectedRoute = lazy(() => import('./components/auth/ProtectedRoute'));
 
-function AppRoutes() {
+const ProtectedApp = () => {
+  return (
+    <TransactionProvider>
+      <MainLayout>
+        <Routes>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/budget" element={<BudgetPage />} />
+          <Route path="/accounts" element={<AccountsPage />} />
+          <Route path="/goals" element={<GoalsPage />} />
+          <Route path="/recurring" element={<RecurringPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </MainLayout>
+    </TransactionProvider>
+  );
+};
+
+const AppContent = () => {
   const { currentUser } = useAuth();
-
   return (
     <Routes>
-      {/* Rute Publik */}
       <Route path="/" element={!currentUser ? <LandingPage /> : <Navigate to="/dashboard" replace />} />
       <Route path="/login" element={!currentUser ? <LoginPage /> : <Navigate to="/dashboard" replace />} />
       <Route path="/register" element={!currentUser ? <RegisterPage /> : <Navigate to="/dashboard" replace />} />
-
-      {/* Rute Terlindungi */}
-      <Route path="/dashboard" element={<ProtectedRoute><MainLayout><DashboardPage /></MainLayout></ProtectedRoute>} />
-      <Route path="/transactions" element={<ProtectedRoute><MainLayout><TransactionsPage /></MainLayout></ProtectedRoute>} />
-      <Route path="/analytics" element={<ProtectedRoute><MainLayout><AnalyticsPage /></MainLayout></ProtectedRoute>} />
-      <Route path="/budget" element={<ProtectedRoute><MainLayout><BudgetPage /></MainLayout></ProtectedRoute>} />
-      <Route path="/accounts" element={<ProtectedRoute><MainLayout><AccountsPage /></MainLayout></ProtectedRoute>} />
-      <Route path="/goals" element={<ProtectedRoute><MainLayout><GoalsPage /></MainLayout></ProtectedRoute>} />
-      <Route path="/recurring" element={<ProtectedRoute><MainLayout><RecurringPage /></MainLayout></ProtectedRoute>} />
-      <Route path="/settings" element={<ProtectedRoute><MainLayout><SettingsPage /></MainLayout></ProtectedRoute>} />
-      
-      {/* Fallback Route */}
-      <Route path="*" element={<Navigate to={currentUser ? "/dashboard" : "/login"} replace />} />
+      <Route path="/*" element={<ProtectedRoute><ProtectedApp /></ProtectedRoute>} />
     </Routes>
   );
-}
+};
 
 function App() {
   return (
     <AuthProvider>
-      <TransactionProvider>
-        <AnimatedBackground />
-        <Toaster position="top-center" reverseOrder={false} toastOptions={{ style: { background: '#333', color: '#fff' } }} />
-        <Suspense fallback={<LoadingSpinner />}>
-          <AppRoutes />
-        </Suspense>
-      </TransactionProvider>
+      <AnimatedBackground />
+      <Toaster position="top-center" reverseOrder={false} toastOptions={{ style: { background: '#333', color: '#fff' } }} />
+      <Suspense fallback={<LoadingSpinner />}>
+        <AppContent />
+      </Suspense>
     </AuthProvider>
   );
 }
