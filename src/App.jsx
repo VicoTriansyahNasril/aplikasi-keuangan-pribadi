@@ -21,34 +21,30 @@ const AccountsPage = lazy(() => import('./pages/Accounts'));
 const RecurringPage = lazy(() => import('./pages/Recurring'));
 const GoalsPage = lazy(() => import('./pages/Goals'));
 
-const ProtectedApp = () => {
-  return (
-    <TransactionProvider>
-      <MainLayout>
-        <Routes>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/transactions" element={<TransactionsPage />} />
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/budget" element={<BudgetPage />} />
-          <Route path="/accounts" element={<AccountsPage />} />
-          <Route path="/goals" element={<GoalsPage />} />
-          <Route path="/recurring" element={<RecurringPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </MainLayout>
-    </TransactionProvider>
-  );
-};
-
-const AppContent = () => {
+const AppRoutes = () => {
   const { currentUser } = useAuth();
   return (
     <Routes>
       <Route path="/" element={!currentUser ? <LandingPage /> : <Navigate to="/dashboard" replace />} />
       <Route path="/login" element={!currentUser ? <LoginPage /> : <Navigate to="/dashboard" replace />} />
       <Route path="/register" element={!currentUser ? <RegisterPage /> : <Navigate to="/dashboard" replace />} />
-      <Route path="/*" element={<ProtectedRoute><ProtectedApp /></ProtectedRoute>} />
+      <Route path="/*" element={
+        <ProtectedRoute>
+          <MainLayout>
+            <Routes>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/transactions" element={<TransactionsPage />} />
+              <Route path="/analytics" element={<AnalyticsPage />} />
+              <Route path="/budget" element={<BudgetPage />} />
+              <Route path="/accounts" element={<AccountsPage />} />
+              <Route path="/goals" element={<GoalsPage />} />
+              <Route path="/recurring" element={<RecurringPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </MainLayout>
+        </ProtectedRoute>
+      }/>
     </Routes>
   );
 };
@@ -56,11 +52,13 @@ const AppContent = () => {
 function App() {
   return (
     <AuthProvider>
-      <AnimatedBackground />
-      <Toaster position="top-center" reverseOrder={false} toastOptions={{ style: { background: '#333', color: '#fff' } }} />
-      <Suspense fallback={<LoadingSpinner />}>
-        <AppContent />
-      </Suspense>
+      <TransactionProvider>
+        <AnimatedBackground />
+        <Toaster position="top-center" reverseOrder={false} toastOptions={{ style: { background: '#333', color: '#fff' } }} />
+        <Suspense fallback={<LoadingSpinner />}>
+          <AppRoutes />
+        </Suspense>
+      </TransactionProvider>
     </AuthProvider>
   );
 }

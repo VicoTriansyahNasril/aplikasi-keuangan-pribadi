@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useTransactions } from '../../context/TransactionContext';
 import Button from '../../components/ui/Button';
 import Modal from '../../components/ui/Modal';
-import TemplateForm from '../../components/feature/TemplateForm'; // Kita akan buat komponen baru ini
+import TemplateForm from '../../components/feature/TemplateForm';
 import EmptyState from '../../components/ui/EmptyState';
 import { FaTrash, FaPlus, FaRedo } from 'react-icons/fa';
 import styles from './Recurring.module.css';
@@ -33,10 +33,9 @@ const RecurringPage = () => {
         </div>
         <Button onClick={() => setModalOpen(true)} icon={<FaPlus />}>Buat Template Baru</Button>
       </header>
-
-      {recurring.length > 0 ? (
-        <div className={styles.recurringList}>
-          {recurring.map(item => (
+      <div className={styles.recurringList}>
+        {recurring.length > 0 ? (
+          recurring.map(item => (
             <div key={item.id} className={styles.recurringItem}>
               <div className={styles.itemHeader}>
                 <div className={styles.itemInfo}>
@@ -52,15 +51,17 @@ const RecurringPage = () => {
                 <Button onClick={() => handleUseTemplate(item)} icon={<FaRedo />}>Gunakan</Button>
               </div>
             </div>
-          ))}
-        </div>
-      ) : (
-        <EmptyState 
-          icon={<FaRedo />}
-          title="Belum Ada Template"
-          message="Buat template untuk transaksi yang sering Anda lakukan, seperti membayar tagihan atau menerima gaji."
-        />
-      )}
+          ))
+        ) : (
+          <div className={styles.emptyStateWrapper}>
+            <EmptyState 
+              icon={<FaRedo />}
+              title="Belum Ada Template"
+              message="Buat template untuk transaksi yang sering Anda lakukan, seperti membayar tagihan atau menerima gaji."
+            />
+          </div>
+        )}
+      </div>
       
       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} title="Buat Template Baru">
         <TemplateForm onClose={() => setModalOpen(false)} />

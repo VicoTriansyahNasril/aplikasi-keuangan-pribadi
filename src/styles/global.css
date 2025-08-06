@@ -1,58 +1,28 @@
 /* src/styles/global.css */
 @import './variables.css';
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   color: var(--color-text-primary);
   line-height: 1.6;
-  background-color: var(--color-primary-bg);
+  transition: background-color 0.5s ease;
 }
 
-body.no-scroll {
-  overflow: hidden;
+body[data-theme='dark'] {
+  background-color: #0A192F;
 }
 
-a {
-  color: var(--color-primary-accent);
-  text-decoration: none;
+body[data-theme='light'] {
+  background: linear-gradient(180deg, #87CEEB 0%, #E0F7FA 100%);
 }
 
-.swal-popup {
-  background-color: var(--color-surface) !important;
-  border: 1px solid var(--color-border) !important;
-  border-radius: var(--border-radius-md) !important;
-}
+body.no-scroll { overflow: hidden; }
+a { color: var(--color-primary-accent); text-decoration: none; }
 
-.swal-title-text {
-  color: var(--color-text-primary) !important;
-}
-
-.swal-html-container {
-  color: var(--color-text-secondary) !important;
-}
-
-.swal-confirm-button {
-  background-color: var(--color-danger) !important;
-  color: #fff !important;
-  padding: 0.6rem 1.5rem;
-  border-radius: var(--border-radius-sm);
-  border: none;
-  font-weight: 600;
-  margin: 0 0.5rem;
-}
-
-.swal-cancel-button {
-  background-color: transparent !important;
-  border: 2px solid var(--color-text-secondary) !important;
-  color: var(--color-text-secondary) !important;
-  padding: 0.6rem 1.5rem;
-  border-radius: var(--border-radius-sm);
-  font-weight: 600;
-  margin: 0 0.5rem;
-}
+/* SweetAlert2 Theming */
+.swal-popup { background-color: var(--color-surface) !important; border: 1px solid var(--color-border) !important; border-radius: var(--border-radius-md) !important; }
+.swal-title-text { color: var(--color-text-primary) !important; }
+.swal-html-container { color: var(--color-text-secondary) !important; }
+.swal-confirm-button { background-color: var(--color-danger) !important; color: #fff !important; padding: 0.6rem 1.5rem; border-radius: var(--border-radius-sm); border: none; font-weight: 600; margin: 0 0.5rem; }
+.swal-cancel-button { background-color: transparent !important; border: 2px solid var(--color-text-secondary) !important; color: var(--color-text-secondary) !important; padding: 0.6rem 1.5rem; border-radius: var(--border-radius-sm); font-weight: 600; margin: 0 0.5rem; }

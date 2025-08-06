@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import { useTransactions } from '../../context/TransactionContext';
 import Button from '../../components/ui/Button';
 import ProgressBar from '../../components/ui/ProgressBar';
+import EmptyState from '../../components/ui/EmptyState';
 import { formatNumberInput, parseFormattedNumber } from '../../utils/formatting';
-import { FaPlus, FaTrash, FaDonate } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaDonate, FaBullseye } from 'react-icons/fa';
 import styles from './Goals.module.css';
 
 const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
@@ -68,7 +69,17 @@ const GoalsPage = () => {
         <Button type="submit" icon={<FaPlus />}>Buat Tujuan</Button>
       </form>
       <div className={styles.goalList}>
-        {goals.map(goal => <GoalItem key={goal.id} goal={goal} />)}
+        {goals.length > 0 ? (
+          goals.map(goal => <GoalItem key={goal.id} goal={goal} />)
+        ) : (
+          <div className={styles.emptyStateWrapper}>
+            <EmptyState 
+              icon={<FaBullseye />}
+              title="Belum Ada Tujuan"
+              message="Buat tujuan menabung pertama Anda untuk mulai melacak progres finansial Anda."
+            />
+          </div>
+        )}
       </div>
     </div>
   );

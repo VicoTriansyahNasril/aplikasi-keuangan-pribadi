@@ -17,7 +17,7 @@ const darkThemeOptions = {
     events: { onhover: { enable: true, mode: 'bubble' } },
     modes: { bubble: { distance: 200, size: 2, duration: 2, opacity: 0.8 } },
   },
-  background: { color: { value: '#0A192F' } },
+  background: { color: { value: 'transparent' } },
 };
 
 const lightThemeOptions = {
@@ -27,16 +27,10 @@ const lightThemeOptions = {
     shape: { type: 'circle' },
     opacity: { value: { min: 0.4, max: 0.8 } },
     size: { value: { min: 50, max: 100 } },
-    move: { enable: true, speed: 1, direction: 'right', random: true, straight: true, out_mode: 'out' },
+    move: { enable: true, speed: 1.5, direction: 'right', random: true, straight: true, out_mode: 'out' },
   },
   interactivity: { events: { onhover: { enable: false } } },
-  background: {
-    gradient: {
-      angle: 90,
-      start: { value: '#87CEEB' },
-      stop: { value: '#E0F2F7' }, 
-    }
-  },
+  background: { color: { value: 'transparent' } },
 };
 
 const AnimatedBackground = () => {

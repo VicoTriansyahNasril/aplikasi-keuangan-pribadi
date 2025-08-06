@@ -15,3 +15,7 @@
 .targetAmount { color: var(--color-text-secondary); }
 .contributeForm { display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-md); flex-wrap: wrap; }
 .contributeForm .input, .contributeForm select { flex: 1 1 100px; }
+.emptyStateWrapper {
+  grid-column: 1 / -1;
+  padding: var(--spacing-xl) 0;
+}
