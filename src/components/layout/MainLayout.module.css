@@ -1,0 +1,23 @@
+/* src/components/layout/MainLayout.module.css */
+.layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.mainContent {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: calc(var(--spacing-xl) * 2);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.mainContent::-webkit-scrollbar {
+  display: none;
+}
