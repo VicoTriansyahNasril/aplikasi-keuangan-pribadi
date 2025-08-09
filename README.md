@@ -1,6 +1,6 @@
-# FinanceApp - Aplikasi Keuangan Pribadi Modern
+# <img src="public/logo.financeApp.png" width="40" align="center" alt="logo"> FinanceApp - Aplikasi Keuangan Pribadi Modern
 
-![FinanceApp Showcase](public/screenshots/showcase.png)
+![FinanceApp Showcase](public/showcase.png)
 
 <p align="center">
   <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React">
@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <strong><a href="https://URL_DEPLOY_VERCEL_ANDA">Lihat Demo Langsung »</a></strong>
+  <strong><a href="https://aplikasi-keuangan-pribadi.vercel.app/">Lihat Demo Langsung »</a></strong>
 </p>
 
 ---
@@ -28,7 +28,7 @@ Aplikasi ini dirancang dengan serangkaian fitur komprehensif untuk memberikan ko
 *   **💼 Manajemen Multi-Akun:** Buat dan kelola beberapa "dompet" virtual (misalnya, Rekening Bank, Tunai, E-Wallet) untuk pencatatan yang akurat.
 *   **🔄 Pencatatan Transaksi (CRUD):** Tambah, lihat, **edit**, dan hapus pemasukan atau pengeluaran dengan formulir cerdas yang memiliki format angka otomatis.
 *   **🎨 Kategori Dinamis:** Personalisasi aplikasi dengan membuat dan menghapus kategori pengeluaran Anda sendiri.
-*   **🎯 Anggaran Bulanan:** Tetapkan batas pengeluaran untuk setiap kategori dan lacak progres pemakaian secara visual dengan *progress bar*. Dapatkan notifikasi saat anggaran terlampaui.
+*   **🎯 Anggaran Bulanan:** Tetapkan batas pengeluaran untuk setiap kategori dan lacak progres pemakaian secara visual dengan *progress bar*.
 *   **💰 Tujuan Menabung (Savings Goals):** Buat target finansial, alokasikan dana, dan lacak progres tabungan Anda untuk mencapai impian.
 *   **🔁 Template Transaksi:** Simpan transaksi rutin (seperti gaji atau tagihan) sebagai template untuk input data yang lebih cepat dengan satu klik.
 *   **📈 Analisis & Visualisasi Data:**
@@ -37,27 +37,34 @@ Aplikasi ini dirancang dengan serangkaian fitur komprehensif untuk memberikan ko
 *   **🌓 Tema Terang & Gelap:** Beralih antara mode terang dan gelap yang indah, lengkap dengan animasi latar belakang partikel yang unik dan dinamis untuk setiap tema.
 *   **📱 Desain Responsif (Mobile-First):** Tampilan yang dioptimalkan untuk pengalaman yang mulus di perangkat desktop, tablet, dan mobile.
 *   **💎 Interaksi Modern:** Dilengkapi dengan notifikasi *toast*, modal konfirmasi SweetAlert2 yang sesuai tema, dan animasi halus menggunakan Framer Motion.
+*   **🔌 Mode Hybrid (Online/Offline):** Berjalan mulus dengan **Firebase** untuk sinkronisasi cloud atau beralih otomatis ke **mode lokal (`localStorage`)** jika koneksi Firebase tidak dikonfigurasi.
 
 ---
 
-## 🎨 Tampilan & Desain
+## 🎨 Galeri Tampilan
 
-#### Mode Gelap (Cosmic Theme)
-![Dark Mode](public/screenshots/dark-mode.png)
-
-#### Mode Terang (Sky Theme)
-![Light Mode](public/screenshots/light-mode.png)
-
-#### Tampilan Responsif
-<p align="center">
-  <img src="public/screenshots/mobile-view.png" width="300" alt="Mobile View">
-</p>
+<table>
+  <tr>
+    <td align="center"><img src="public/Dashboard Darkmode.png" width="400" alt="Dashboard Dark Mode"><br><sub><b>Dashboard (Mode Gelap)</b></sub></td>
+    <td align="center"><img src="public/Dashboard Lightmode.png" width="400" alt="Dashboard Light Mode"><br><sub><b>Dashboard (Mode Terang)</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="public/Pengeluaran Darkmode.png" width="400" alt="Formulir Transaksi"><br><sub><b>Formulir Transaksi Cerdas</b></sub></td>
+    <td align="center"><img src="public/Kelola Anggaran Darkmode.png" width="400" alt="Kelola Anggaran"><br><sub><b>Manajemen Anggaran</b></sub></td>
+  </tr>
+    <tr>
+    <td align="center"><img src="public/Template berulang Darkmode.png" width="400" alt="Template Transaksi"><br><sub><b>Template Transaksi</b></sub></td>
+    <td align="center"><img src="public/Kelola Dompet Darkmode.png" width="400" alt="Manajemen Akun"><br><sub><b>Manajemen Akun/Dompet</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="public/Statistik mobile darkmode.png" width="400" alt="Analisis Keuangan"><br><sub><b>Analisis Keuangan</b></sub></td>
+    <td align="center"><img src="public/Dashboard Darkmode Mobile Mode.png" width="400" alt="Tampilan Mobile"><br><sub><b>Desain Responsif Mobile</b></sub></td>
+  </tr>
+</table>
 
 ---
 
 ## 🛠️ Tumpukan Teknologi
-
-Aplikasi ini dibangun menggunakan ekosistem JavaScript modern:
 
 *   **Framework:** [React.js](https://react.dev/)
 *   **Build Tool:** [Vite](https://vitejs.dev/)
@@ -75,39 +82,55 @@ Aplikasi ini dibangun menggunakan ekosistem JavaScript modern:
 
 ## 🚀 Menjalankan Proyek Secara Lokal
 
-Untuk menjalankan proyek ini di mesin lokal Anda, ikuti langkah-langkah berikut:
+Proyek ini dapat dijalankan dalam dua mode: **Mode Offline** (tanpa setup) atau **Mode Online** (dengan Firebase).
 
-1.  **Clone repository ini:**
-    ```bash
-    git clone https://github.com/VicoTriansyahNasril/aplikasi-keuangan-pribadi.git
-    cd aplikasi-keuangan-pribadi
-    ```
+### 1. Prasyarat
 
-2.  **Install semua dependensi:**
-    ```bash
-    npm install
-    ```
+*   Pastikan Anda memiliki [Node.js](https://nodejs.org/) (versi 16 atau lebih tinggi) dan [Git](https://git-scm.com/) terinstal.
 
-3.  **Setup Environment Variables:**
-    *   Buat akun di [Firebase](https://firebase.google.com/) dan buat proyek baru.
-    *   Aktifkan **Authentication** (Email/Password) dan **Firestore Database**.
-    *   Buat file `.env.local` di root proyek.
-    *   Salin kunci konfigurasi Firebase Anda ke dalam file `.env.local` dengan format berikut:
-    ```
-    VITE_FIREBASE_API_KEY=xxx
-    VITE_FIREBASE_AUTH_DOMAIN=xxx
-    VITE_FIREBASE_PROJECT_ID=xxx
-    VITE_FIREBASE_STORAGE_BUCKET=xxx
-    VITE_FIREBASE_MESSAGING_SENDER_ID=xxx
-    VITE_FIREBASE_APP_ID=xxx
-    ```
+### 2. Instalasi
 
-4.  **Jalankan aplikasi:**
-    ```bash
-    npm run dev
-    ```
-    Aplikasi akan berjalan di `http://localhost:5173`.
+Clone repository ini dan install semua dependensi:
+```bash
+git clone https://github.com/VicoTriansyahNasril/aplikasi-keuangan-pribadi.git
+cd aplikasi-keuangan-pribadi
+npm install
+```
 
----
+### 3. Menjalankan Aplikasi
 
-Terima kasih telah melihat proyek ini!
+#### 🏃‍♂️ Mode Offline (Cara Cepat)
+Cara termudah untuk mencoba aplikasi. Tidak memerlukan akun Firebase. Data akan disimpan di `localStorage` browser Anda.
+
+```bash
+npm run dev
+```
+
+Buka http://localhost:5173 di browser Anda.
+
+Buat Proyek Firebase:
+* Buka Firebase Console dan buat proyek baru.
+* Di dalam proyek, aktifkan Authentication (pilih provider Email/Password) dan buat Firestore Database.
+* Konfigurasi Kredensial:
+* Salin file .env.example menjadi file baru bernama .env.
+* Buka Pengaturan Proyek (Project Settings) di Firebase dan temukan konfigurasi aplikasi web Anda.
+* Salin kredensial tersebut ke dalam file .env Anda.
+
+```bash
+# .env
+VITE_USE_FIREBASE=true
+
+VITE_FIREBASE_API_KEY=xxxxxxxxxxxxxxxx
+VITE_FIREBASE_AUTH_DOMAIN=xxxxxxxxxxxxxxxx
+VITE_FIREBASE_PROJECT_ID=xxxxxxxxxxxxxxxx
+VITE_FIREBASE_STORAGE_BUCKET=xxxxxxxxxxxxxxxx
+VITE_FIREBASE_MESSAGING_SENDER_ID=xxxxxxxxxxxxxxxx
+VITE_FIREBASE_APP_ID=xxxxxxxxxxxxxxxx
+```
+
+Jalankan Aplikasi:
+```bash
+npm run dev
+```
+Aplikasi sekarang akan terhubung ke database Firebase Anda.
+* Terima kasih telah melihat proyek ini!
